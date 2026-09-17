@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>下载市场 · cloud-r2pan</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  color:#fff;background:linear-gradient(160deg,#0b1026 0%,#1a1240 45%,#2a1045 100%);
+  padding:24px 20px 80px;min-height:100vh;position:relative;overflow-x:hidden;
+}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none;animation:drift 18s ease-in-out infinite alternate}
+.o1{width:46vmax;height:46vmax;background:#38bdf8;top:-18%;left:-14%}
+.o2{width:40vmax;height:40vmax;background:#8b5cf6;bottom:-20%;right:-10%;animation-delay:-6s}
+.o3{width:30vmax;height:30vmax;background:#ec4899;top:55%;left:8%;animation-delay:-12s;opacity:.35}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(6vw,-5vh) scale(1.12)}}
+
+.container{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+header{margin-bottom:32px;animation:rise .5s cubic-bezier(.22,1.2,.36,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.brand-icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,.06));backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;background:linear-gradient(180deg,#fff,#b8c3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{font-size:14px;color:rgba(255,255,255,.5);margin-top:4px}
+.toolbar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.search{flex:1;min-width:240px;position:relative}
+.search input{
+  width:100%;padding:14px 48px 14px 20px;border-radius:16px;
+  background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
+  backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:15px;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.search input:focus{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 4px rgba(56,189,248,.15)}
+.search input::placeholder{color:rgba(255,255,255,.4)}
+.search svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);opacity:.55}
+.sort select{
+  padding:14px 44px 14px 20px;border-radius:16px;
+  background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
+  backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:15px;
+  appearance:none;cursor:pointer;outline:none;min-width:150px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+}
+.sort select option{background:#1a1240;color:#fff}
+
+.stats{display:flex;gap:16px;margin-bottom:20px;font-size:13px;color:rgba(255,255,255,.55);animation:rise .5s .05s cubic-bezier(.22,1.2,.36,1) both;flex-wrap:wrap}
+.stats .active{color:rgba(255,255,255,.85)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.card{
+  border-radius:22px;padding:20px;cursor:pointer;position:relative;
+  background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 8px 24px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.3);
+  transition:transform .2s cubic-bezier(.22,1.2,.36,1),box-shadow .2s,border-color .2s;
+  animation:rise .5s cubic-bezier(.22,1.2,.36,1) both;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.4);border-color:rgba(56,189,248,.5)}
+.card-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.icon{width:52px;height:52px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.25);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.title{font-size:16px;font-weight:600;letter-spacing:-.01em;line-height:1.3;margin-bottom:4px;word-break:break-word}
+.title .alt{color:rgba(255,255,255,.55);font-weight:400;font-size:13px}
+.desc{font-size:13px;color:rgba(255,255,255,.6);line-height:1.55;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.45)}
+.meta-left{display:flex;gap:10px;align-items:center}
+.pill{padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);font-size:11px;color:rgba(255,255,255,.75)}
+.heat{
+  position:absolute;top:14px;right:14px;
+  padding:4px 10px;border-radius:999px;
+  background:linear-gradient(135deg,#ff6b6b,#ee5a24);
+  font-size:11px;font-weight:700;color:#fff;
+  box-shadow:0 4px 12px rgba(238,90,36,.4);
+}
+.heat.popular{background:linear-gradient(135deg,#ffd32a,#ff6348);box-shadow:0 4px 14px rgba(255,99,72,.45)}
+.heat.hot{background:linear-gradient(135deg,#ff4757,#a55eea);box-shadow:0 4px 16px rgba(165,94,234,.5)}
+
+.empty{grid-column:1/-1;text-align:center;padding:80px 20px;animation:rise .5s cubic-bezier(.22,1.2,.36,1) both}
+.empty .emoji{font-size:60px;margin-bottom:16px;opacity:.8}
+.empty h3{font-size:20px;font-weight:600;margin-bottom:8px;color:rgba(255,255,255,.9)}
+.empty p{font-size:14px;color:rgba(255,255,255,.5)}
+
+.pagination{display:flex;justify-content:center;gap:8px;margin-top:32px;align-items:center;animation:rise .5s cubic-bezier(.22,1.2,.36,1) both;flex-wrap:wrap}
+.pagination button{
+  min-width:38px;height:38px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.22);
+  background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  color:#fff;font-size:14px;cursor:pointer;transition:all .2s;
+  backdrop-filter:blur(10px);
+}
+.pagination button:hover:not(:disabled){background:rgba(255,255,255,.2);transform:translateY(-1px)}
+.pagination button.active{background:linear-gradient(180deg,#3d9bff,#0a7cff);border-color:transparent;box-shadow:0 6px 18px rgba(10,124,255,.35)}
+.pagination button:disabled{opacity:.4;cursor:not-allowed}
+.pagination .info{font-size:13px;color:rgba(255,255,255,.55);margin:0 8px}
+
+.loading{grid-column:1/-1;display:flex;justify-content:center;padding:80px}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.2);border-top-color:#38bdf8;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+footer{text-align:center;font-size:12px;color:rgba(255,255,255,.3);margin-top:40px}
+footer a{color:rgba(56,189,248,.8);text-decoration:none}
+
+.lang-btn{margin-left:10px;padding:4px 13px;border-radius:11px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;font-size:12px;cursor:pointer;backdrop-filter:blur(10px);transition:all .15s}
+.lang-btn:hover{background:rgba(255,255,255,.2);color:#fff}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="brand-icon">📦</div>
+      <div>
+        <h1 id="brand-title"></h1>
+        <div class="subtitle" id="brand-subtitle"></div>
+      </div>
+      <button class="lang-btn" id="lang-toggle"></button>
+    </div>
+    <div class="toolbar">
+      <div class="search">
+        <input id="q" type="text" placeholder="">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <div class="sort">
+        <select id="sort">
+          <option value="hot"></option>
+          <option value="newest"></option>
+          <option value="downloads"></option>
+          <option value="views"></option>
+        </select>
+      </div>
+    </div>
+    <div class="stats">
+      <span><span id="stats-total-prefix"></span> <span id="total" class="active">—</span> <span id="stats-total-suffix"></span></span>
+      <span>· <span id="stats-perpage-prefix"></span> <span class="active">12</span> <span id="stats-perpage-suffix"></span></span>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid" id="grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+  <footer>
+    <span id="footer-text"></span>
+  </footer>
+</div>
+
+<script>
+/* ═══════════ i18n ═══════════ */
+const I18N = {
+  zh: {
+    pageTitle: '下载市场 · cloud-r2pan',
+    brandTitle: '下载市场',
+    brandSubtitle: '发现、分享、下载',
+    searchPlaceholder: '搜索文件名、标题或描述…',
+    sortHot: '🔥 热度最高',
+    sortNewest: '🆕 最新发布',
+    sortDownloads: '⬇️ 下载量',
+    sortViews: '👁 浏览量',
+    statsTotalPrefix: '共',
+    statsTotalSuffix: '个资源',
+    statsPerpagePrefix: '每页',
+    statsPerpageSuffix: '条',
+    footerText: 'Powered by cloud-r2pan · <a href="/admin">管理后台</a>',
+    switchTo: 'EN',
+    loading: '加载中…',
+    loadFailTitle: '加载失败',
+    loadFailDesc: '稍后再试',
+    networkErrTitle: '网络错误',
+    networkErrDesc: '请检查网络连接',
+    emptySearchTitle: '没找到相关资源',
+    emptySearchDesc: '试试换个关键词',
+    emptyMarketTitle: '下载市场还是空的',
+    emptyMarketDesc: '管理员还没有公开任何文件',
+    noDesc: '暂无描述',
+    heatChampion: '👑 冠军',
+    heatRank2: '🥈',
+    heatRank3: '🥉',
+    downloadsLabel: '下载',
+    viewsLabel: '浏览',
+    prevPage: '‹',
+    nextPage: '›',
+    pagesInfoPrefix: '共',
+    pagesInfoSuffix: '页',
+    recent: '刚刚',
+    minutesAgo: '{n}分钟前',
+    hoursAgo: '{n}小时前',
+    daysAgo: '{n}天前',
+  },
+  en: {
+    pageTitle: 'Marketplace · cloud-r2pan',
+    brandTitle: 'Marketplace',
+    brandSubtitle: 'Discover · Share · Download',
+    searchPlaceholder: 'Search file name, title or description…',
+    sortHot: '🔥 Trending',
+    sortNewest: '🆕 Newest',
+    sortDownloads: '⬇️ Downloads',
+    sortViews: '👁 Views',
+    statsTotalPrefix: '',
+    statsTotalSuffix: 'resources',
+    statsPerpagePrefix: '',
+    statsPerpageSuffix: 'per page',
+    footerText: 'Powered by cloud-r2pan · <a href="/admin">Admin</a>',
+    switchTo: '中文',
+    loading: 'Loading…',
+    loadFailTitle: 'Failed to load',
+    loadFailDesc: 'Please try again later',
+    networkErrTitle: 'Network error',
+    networkErrDesc: 'Please check your connection',
+    emptySearchTitle: 'No results found',
+    emptySearchDesc: 'Try a different keyword',
+    emptyMarketTitle: 'Marketplace is empty',
+    emptyMarketDesc: 'No public files yet from the administrator',
+    noDesc: 'No description',
+    heatChampion: '👑 #1',
+    heatRank2: '🥈 #2',
+    heatRank3: '🥉 #3',
+    downloadsLabel: 'DL',
+    viewsLabel: 'View',
+    prevPage: '‹',
+    nextPage: '›',
+    pagesInfoPrefix: '',
+    pagesInfoSuffix: 'pages',
+    recent: 'just now',
+    minutesAgo: '{n}m ago',
+    hoursAgo: '{n}h ago',
+    daysAgo: '{n}d ago',
+  }
+};
+
+/** 语言检测：手动选择 > 浏览器首选语言 > 时区（大中华区） > 英文 */
+function detectLang(){
+  try {
+    const saved = localStorage.getItem('cd_lang');
+    if (saved === 'zh' || saved === 'en') return saved;
+  } catch {}
+  const first = String((navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language) || '').toLowerCase();
+  if (first.startsWith('zh')) return 'zh';
+  if (first) return 'en';
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (/^Asia\/(Shanghai|Chongqing|Harbin|Urumqi|Kashgar|Hong_Kong|Macau|Taipei)$/.test(tz)) return 'zh';
+  } catch {}
+  return 'en';
+}
+
+let LANG = detectLang();
+const t = (key, params) => {
+  let s = (I18N[LANG] && I18N[LANG][key]) ?? I18N.en[key] ?? key;
+  if (params) for (const k in params) s = s.split('{' + k + '}').join(params[k]);
+  return s;
+};
+
+// 应用 i18n 到静态元素
+document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';
+document.title = t('pageTitle');
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => r.querySelectorAll(s);
+const grid = $("#grid");
+const pagination = $("#pagination");
+const totalEl = $("#total");
+const qInput = $("#q");
+const sortSel = $("#sort");
+
+$('#brand-title').textContent = t('brandTitle');
+$('#brand-subtitle').textContent = t('brandSubtitle');
+$('#q').placeholder = t('searchPlaceholder');
+$('#sort option[value="hot"]').textContent = t('sortHot');
+$('#sort option[value="newest"]').textContent = t('sortNewest');
+$('#sort option[value="downloads"]').textContent = t('sortDownloads');
+$('#sort option[value="views"]').textContent = t('sortViews');
+$('#stats-total-prefix').textContent = t('statsTotalPrefix');
+$('#stats-total-suffix').textContent = t('statsTotalSuffix');
+$('#stats-perpage-prefix').textContent = t('statsPerpagePrefix');
+$('#stats-perpage-suffix').textContent = t('statsPerpageSuffix');
+$('#footer-text').innerHTML = t('footerText');
+$('#lang-toggle').textContent = t('switchTo');
+$('#lang-toggle').onclick = () => {
+  try { localStorage.setItem('cd_lang', LANG === 'zh' ? 'en' : 'zh'); } catch {}
+  location.reload();
+};
+
+let state = { page: 1, sort: "hot", q: "", total: 0 };
+let debounceTimer = null;
+
+const EXT_ICON = {
+  zip:"📦", rar:"📦", "7z":"📦", tar:"📦", gz:"📦",
+  png:"🖼", jpg:"🖼", jpeg:"🖼", gif:"🖼", webp:"🖼", svg:"🖼", heic:"🖼",
+  mp4:"🎬", mov:"🎬", mkv:"🎬", avi:"🎬",
+  mp3:"🎵", flac:"🎵", wav:"🎵", aac:"🎵",
+  pdf:"📄", doc:"📝", docx:"📝", xls:"📊", xlsx:"📊", ppt:"📊", pptx:"📊",
+  txt:"📄", md:"📄", json:"📄", csv:"📊",
+  exe:"⚙️", msi:"⚙️", dmg:"⚙️", apk:"📱", ipa:"📱", appimage:"⚙️", deb:"⚙️",
+};
+function extOf(n){ return (n.split(".").pop() || "").toLowerCase(); }
+function iconFor(n){ return EXT_ICON[extOf(n)] || "📎"; }
+function fmtSize(b){
+  if(b==null||b===0) return "0 B";
+  const u=["B","KB","MB","GB","TB"]; let i=0; let n=Number(b);
+  while(n>=1024&&i<u.length-1){n/=1024;i++;}
+  return (i===0?n:n.toFixed(n<10?2:n<100?1:0))+" "+u[i];
+}
+function fmtDate(ts){
+  if(!ts) return "";
+  const d=new Date(ts); const now=Date.now();
+  const diff=now-ts;
+  if(diff<60e3) return t('recent');
+  if(diff<3600e3) return t('minutesAgo',{n:Math.floor(diff/60e3)});
+  if(diff<86400e3) return t('hoursAgo',{n:Math.floor(diff/3600e3)});
+  if(diff<7*86400e3) return t('daysAgo',{n:Math.floor(diff/86400e3)});
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+async function load(){
+  grid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  const params = new URLSearchParams({ page: state.page, sort: state.sort, size: 12 });
+  if(state.q) params.set("q", state.q);
+  const url = `/api/market?${params.toString()}`;
+  try {
+    const r = await fetch(url);
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const d = await r.json();
+    if(!d.ok){ renderEmpty("😵",t('loadFailTitle'),t('loadFailDesc')); return; }
+    state.total = d.total;
+    totalEl.textContent = d.total;
+    render(d.items || [], d.total, d.page, d.size);
+  } catch(e){
+    console.error(e);
+    renderEmpty("😵",t('networkErrTitle'),t('networkErrDesc'));
+  }
+}
+
+function render(items, total, page, size){
+  if(!items.length){
+    grid.innerHTML = state.q
+      ? `<div class="empty"><div class="emoji">🔍</div><h3>${t('emptySearchTitle')}</h3><p>${t('emptySearchDesc')}</p></div>`
+      : `<div class="empty"><div class="emoji">📭</div><h3>${t('emptyMarketTitle')}</h3><p>${t('emptyMarketDesc')}</p></div>`;
+    pagination.innerHTML = "";
+    return;
+  }
+  const heatMax = items[0].heat || 1;
+  const cards = items.map((it, i) => {
+    const heat = it.heat || 0;
+    const rank = page === 1 ? i + 1 : null;
+    const heatClass = rank && rank <= 3 ? "hot" : (heat > heatMax * 0.5 ? "popular" : "");
+    const title = it.market_title || it.file_name;
+    const desc = it.market_desc || "";
+    const showHeatBadge = state.sort === "hot" && rank && rank <= 10;
+    let heatLabel;
+    if (rank === 1) heatLabel = t('heatChampion');
+    else if (rank === 2) heatLabel = t('heatRank2');
+    else if (rank === 3) heatLabel = t('heatRank3');
+    else heatLabel = `🔥 ${heat}`;
+    const safeTitle = escapeHtml(title);
+    const safeFileName = escapeHtml(it.file_name);
+    const safeDesc = escapeHtml(desc);
+    const safeUrl = escapeHtml(it.url);
+    return `
+      <a class="card" href="${safeUrl}" style="animation-delay:${Math.min(i*40,400)}ms">
+        ${showHeatBadge ? `<div class="heat ${heatClass}">${escapeHtml(heatLabel)}</div>` : ""}
+        <div class="card-head">
+          <div class="icon">${iconFor(it.file_name)}</div>
+          <div style="flex:1;min-width:0">
+            <div class="title" title="${safeTitle}">${safeTitle}${it.market_title && it.market_title !== it.file_name ? `<div class="alt" style="font-size:12px">${safeFileName}</div>` : ""}</div>
+          </div>
+        </div>
+        ${desc ? `<div class="desc" title="${safeDesc}">${safeDesc}</div>` : `<div class="desc" style="min-height:38px;color:rgba(255,255,255,.35);font-style:italic">${t('noDesc')}</div>`}
+        <div class="meta">
+          <div class="meta-left">
+            <span class="pill">📦 ${fmtSize(it.file_size)}</span>
+            <span class="pill">⬇️ ${(it.download_count || 0)} ${t('downloadsLabel')}</span>
+            <span class="pill">👁 ${(it.market_views || 0)} ${t('viewsLabel')}</span>
+          </div>
+          <span class="pill" style="color:rgba(255,255,255,.5)">${fmtDate(it.created_at)}</span>
+        </div>
+      </a>
+    `;
+  }).join("");
+  grid.innerHTML = cards;
+  renderPagination(total, page, size);
+}
+
+function renderPagination(total, page, size){
+  const pages = Math.max(1, Math.ceil(total / size));
+  if(pages <= 1){ pagination.innerHTML = ""; return; }
+  const btns = [];
+  btns.push(`<button ${page<=1?"disabled":""} data-p="${page-1}">${t('prevPage')}</button>`);
+  const range = getPageRange(page, pages);
+  if(range.start > 1){ btns.push(`<button data-p="1">1</button>`); if(range.start > 2) btns.push(`<span class="info">…</span>`); }
+  for(let i = range.start; i <= range.end; i++){
+    btns.push(`<button class="${i===page?'active':''}" data-p="${i}">${i}</button>`);
+  }
+  if(range.end < pages){ if(range.end < pages-1) btns.push(`<span class="info">…</span>`); btns.push(`<button data-p="${pages}">${pages}</button>`); }
+  btns.push(`<button ${page>=pages?"disabled":""} data-p="${page+1}">${t('nextPage')}</button>`);
+  pagination.innerHTML = `<span class="info">${t('pagesInfoPrefix')} ${pages} ${t('pagesInfoSuffix')}</span>` + btns.join("");
+  pagination.querySelectorAll("button[data-p]").forEach(b => b.addEventListener("click", () => {
+    state.page = Number(b.dataset.p); load();
+  }));
+}
+function getPageRange(cur, total){
+  if(total <= 7) return { start: 1, end: total };
+  let start = Math.max(1, cur - 2);
+  let end = Math.min(total, start + 4);
+  if(end - start < 4) start = Math.max(1, end - 4);
+  return { start, end };
+}
+
+function escapeHtml(s){ const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+// 事件
+qInput.addEventListener("input", () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => { state.q = qInput.value.trim(); state.page = 1; load(); }, 300);
+});
+sortSel.addEventListener("change", () => { state.sort = sortSel.value; state.page = 1; load(); });
+
+function renderEmpty(emoji, title, desc){
+  grid.innerHTML = `<div class="empty"><div class="emoji">${escapeHtml(emoji)}</div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(desc)}</p></div>`;
+}
+
+// 初始
+load();
+</script>
+</body>
+</html>
